@@ -73,12 +73,15 @@
             border-radius: 3px;
         }
         
-        .buttons {
+        .buttons-container {
+            position: relative;
+            width: 100%;
+            margin-top: 30px;
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-top: 30px;
-            position: relative;
+            /* 允许按钮超出容器范围 */
+            overflow: visible;
         }
         
         .btn {
@@ -87,24 +90,28 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* 弹性动画 */
             font-weight: bold;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0; /* 防止按钮被压缩 */
         }
         
         .btn-agree {
             background: linear-gradient(to right, #4caf50, #8bc34a);
             color: white;
             z-index: 10;
+            transform-origin: center;
         }
         
         .btn-disagree {
             background: linear-gradient(to right, #f44336, #ff9800);
             color: white;
+            transform-origin: center;
+            position: relative;
         }
         
         .btn-agree:hover {
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.05);
             box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
         }
         
@@ -154,6 +161,16 @@
             100% { transform: scale(1); }
         }
         
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.3s ease-in-out;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 600px) {
             .card {
@@ -164,7 +181,7 @@
                 font-size: 1.8rem;
             }
             
-            .buttons {
+            .buttons-container {
                 flex-direction: column;
                 gap: 15px;
             }
@@ -183,7 +200,7 @@
             </div>
             <h1>你愿意成为我的儿子吗？</h1>
             
-            <div class="buttons">
+            <div class="buttons-container">
                 <button class="btn btn-agree" id="agreeBtn">同意</button>
                 <button class="btn btn-disagree" id="disagreeBtn">不同意</button>
             </div>
@@ -202,6 +219,7 @@
             const agreeBtn = document.getElementById('agreeBtn');
             const disagreeBtn = document.getElementById('disagreeBtn');
             const resultDiv = document.getElementById('result');
+            const buttonsContainer = document.querySelector('.buttons-container');
             let disagreeCount = 0;
             const disagreeTexts = [
                 "再想想？",
@@ -219,33 +237,48 @@
             disagreeBtn.addEventListener('click', function() {
                 disagreeCount++;
                 
-                // 放大同意按钮
+                // 放大同意按钮 (挤压效果)
                 const currentSize = parseFloat(getComputedStyle(agreeBtn).fontSize);
-                agreeBtn.style.fontSize = (currentSize + 4) + 'px';
+                agreeBtn.style.fontSize = (currentSize + 6) + 'px'; // 增加放大力度
                 
                 const currentPadding = parseFloat(getComputedStyle(agreeBtn).paddingLeft);
-                agreeBtn.style.padding = currentPadding + 'px ' + (currentPadding + 10) + 'px';
+                agreeBtn.style.padding = (currentPadding + 4) + 'px ' + (currentPadding + 20) + 'px';
                 
-                // 更改不同意按钮文本并缩小
+                // 缩小不同意按钮 (被挤压)
+                const currentDisagreeSize = parseFloat(getComputedStyle(disagreeBtn).fontSize);
+                if (currentDisagreeSize > 8) {
+                    disagreeBtn.style.fontSize = (currentDisagreeSize - 4) + 'px'; // 增加缩小力度
+                    
+                    const currentDisagreePadding = parseFloat(getComputedStyle(disagreeBtn).paddingLeft);
+                    if (currentDisagreePadding > 5) {
+                        disagreeBtn.style.padding = (currentDisagreePadding - 5) + 'px ' + (currentDisagreePadding - 5) + 'px';
+                    }
+                }
+                
+                // 更改不同意按钮文本
                 if (disagreeCount < disagreeTexts.length) {
                     disagreeBtn.textContent = disagreeTexts[disagreeCount];
                 } else {
                     disagreeBtn.textContent = disagreeTexts[disagreeTexts.length - 1];
                 }
                 
-                const currentDisagreeSize = parseFloat(getComputedStyle(disagreeBtn).fontSize);
-                if (currentDisagreeSize > 8) {
-                    disagreeBtn.style.fontSize = (currentDisagreeSize - 2) + 'px';
-                    
-                    const currentDisagreePadding = parseFloat(getComputedStyle(disagreeBtn).paddingLeft);
-                    if (currentDisagreePadding > 5) {
-                        disagreeBtn.style.padding = (currentDisagreePadding - 3) + 'px ' + (currentDisagreePadding - 3) + 'px';
-                    }
-                }
+                // 添加抖动效果，增加趣味性
+                disagreeBtn.classList.add('shake');
+                setTimeout(() => {
+                    disagreeBtn.classList.remove('shake');
+                }, 300);
                 
-                // 如果点击次数过多，隐藏不同意按钮
-                if (disagreeCount > 10) {
-                    disagreeBtn.style.display = 'none';
+                // 如果点击次数过多，将不同意按钮移出屏幕
+                if (disagreeCount > 8) {
+                    // 通过缩小和透明度变化实现"被挤出"效果
+                    disagreeBtn.style.transform = 'scale(0.1)';
+                    disagreeBtn.style.opacity = '0';
+                    disagreeBtn.style.pointerEvents = 'none'; // 禁止再次点击
+                    
+                    // 最后完全隐藏
+                    setTimeout(() => {
+                        disagreeBtn.style.display = 'none';
+                    }, 500);
                 }
             });
             
@@ -254,7 +287,7 @@
                 resultDiv.style.display = 'block';
                 
                 // 隐藏问题和按钮
-                document.querySelector('.buttons').style.display = 'none';
+                document.querySelector('.buttons-container').style.display = 'none';
                 document.querySelector('h1').style.display = 'none';
                 document.querySelector('.image-container').style.display = 'none';
             });
