@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你愿意成为我的儿子吗？</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .image-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid #4e54c8;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 3px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-agree {
+            background: linear-gradient(to right, #4caf50, #8bc34a);
+            color: white;
+            z-index: 10;
+        }
+        
+        .btn-disagree {
+            background: linear-gradient(to right, #f44336, #ff9800);
+            color: white;
+        }
+        
+        .btn-agree:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-disagree:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+        }
+        
+        .result {
+            display: none;
+            margin-top: 40px;
+        }
+        
+        .result-image {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 5px solid #ffeb3b;
+        }
+        
+        .result-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .result h2 {
+            color: #4caf50;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .heart {
+            color: #f44336;
+            font-size: 2.8rem;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="亲切的图像">
+            </div>
+            <h1>你愿意成为我的儿子吗？</h1>
+            
+            <div class="buttons">
+                <button class="btn btn-agree" id="agreeBtn">同意</button>
+                <button class="btn btn-disagree" id="disagreeBtn">不同意</button>
+            </div>
+            
+            <div class="result" id="result">
+                <div class="result-image">
+                    <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="快乐图像">
+                </div>
+                <h2>喜欢你 <span class="heart">❤</span></h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const agreeBtn = document.getElementById('agreeBtn');
+            const disagreeBtn = document.getElementById('disagreeBtn');
+            const resultDiv = document.getElementById('result');
+            let disagreeCount = 0;
+            const disagreeTexts = [
+                "再想想？",
+                "确定不同意？",
+                "真的不再考虑一下？",
+                "给你最后一次机会！",
+                "我要生气了！",
+                "哼！",
+                "😠",
+                "😡",
+                "💢"
+            ];
+            
+            // 不同意按钮点击事件
+            disagreeBtn.addEventListener('click', function() {
+                disagreeCount++;
+                
+                // 放大同意按钮
+                const currentSize = parseFloat(getComputedStyle(agreeBtn).fontSize);
+                agreeBtn.style.fontSize = (currentSize + 4) + 'px';
+                
+                const currentPadding = parseFloat(getComputedStyle(agreeBtn).paddingLeft);
+                agreeBtn.style.padding = currentPadding + 'px ' + (currentPadding + 10) + 'px';
+                
+                // 更改不同意按钮文本并缩小
+                if (disagreeCount < disagreeTexts.length) {
+                    disagreeBtn.textContent = disagreeTexts[disagreeCount];
+                } else {
+                    disagreeBtn.textContent = disagreeTexts[disagreeTexts.length - 1];
+                }
+                
+                const currentDisagreeSize = parseFloat(getComputedStyle(disagreeBtn).fontSize);
+                if (currentDisagreeSize > 8) {
+                    disagreeBtn.style.fontSize = (currentDisagreeSize - 2) + 'px';
+                    
+                    const currentDisagreePadding = parseFloat(getComputedStyle(disagreeBtn).paddingLeft);
+                    if (currentDisagreePadding > 5) {
+                        disagreeBtn.style.padding = (currentDisagreePadding - 3) + 'px ' + (currentDisagreePadding - 3) + 'px';
+                    }
+                }
+                
+                // 如果点击次数过多，隐藏不同意按钮
+                if (disagreeCount > 10) {
+                    disagreeBtn.style.display = 'none';
+                }
+            });
+            
+            // 同意按钮点击事件
+            agreeBtn.addEventListener('click', function() {
+                resultDiv.style.display = 'block';
+                
+                // 隐藏问题和按钮
+                document.querySelector('.buttons').style.display = 'none';
+                document.querySelector('h1').style.display = 'none';
+                document.querySelector('.image-container').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
