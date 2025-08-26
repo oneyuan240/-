@@ -9,289 +9,323 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', sans-serif;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
         }
         
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             padding: 20px;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         
-        .container {
-            width: 100%;
-            max-width: 800px;
+        .content-container {
             text-align: center;
-        }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
             padding: 30px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-            transition: all 0.5s ease;
-            overflow: hidden;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         
         .image-container {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 20px;
+            margin-bottom: 25px;
+        }
+        
+        .heart-image {
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            overflow: hidden;
-            border: 5px solid #4e54c8;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .image-container img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
+            border: 5px solid #6a11cb;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
         
-        h1 {
+        .heart-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .question {
+            font-size: 28px;
             color: #333;
             margin-bottom: 30px;
-            font-size: 2.2rem;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        h1:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            border-radius: 3px;
+            font-weight: bold;
         }
         
         .buttons-container {
-            position: relative;
-            width: 100%;
-            margin-top: 30px;
             display: flex;
             justify-content: center;
-            gap: 30px;
-            /* 允许按钮超出容器范围 */
-            overflow: visible;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            position: relative;
+            transition: all 0.5s ease;
         }
         
         .btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 16px 40px;
             border: none;
             border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* 弹性动画 */
+            font-size: 18px;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            flex-shrink: 0; /* 防止按钮被压缩 */
-        }
-        
-        .btn-agree {
-            background: linear-gradient(to right, #4caf50, #8bc34a);
-            color: white;
-            z-index: 10;
-            transform-origin: center;
-        }
-        
-        .btn-disagree {
-            background: linear-gradient(to right, #f44336, #ff9800);
-            color: white;
-            transform-origin: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
             position: relative;
         }
         
-        .btn-agree:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        .yes-btn {
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+            z-index: 2;
         }
         
-        .btn-disagree:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+        .no-btn {
+            background: linear-gradient(to right, #f44336, #c62828);
+            color: white;
+            z-index: 1;
         }
         
-        .result {
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .success-page {
             display: none;
-            margin-top: 40px;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
         }
         
-        .result-image {
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 20px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 5px solid #ffeb3b;
-        }
-        
-        .result-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .result h2 {
-            color: #4caf50;
-            font-size: 2.5rem;
+        .success-image {
+            width: 200px;
+            height: 200px;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #4caf50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .heart {
-            color: #f44336;
-            font-size: 2.8rem;
-            display: inline-block;
-            animation: pulse 1.5s infinite;
+        .success-text {
+            font-size: 32px;
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
         
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        .shake {
-            animation: shake 0.3s ease-in-out;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 600px) {
-            .card {
+        /* 竖屏模式 */
+        @media (max-width: 768px) {
+            .content-container {
                 padding: 20px;
             }
             
-            h1 {
-                font-size: 1.8rem;
+            .question {
+                font-size: 24px;
             }
             
             .buttons-container {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 15px;
             }
             
             .btn {
-                width: 100%;
+                padding: 14px 30px;
+                font-size: 16px;
+            }
+        }
+        
+        /* 横屏模式 */
+        @media (min-width: 769px) and (orientation: landscape) {
+            .buttons-container {
+                flex-direction: row;
+                gap: 25px;
+            }
+        }
+        
+        /* 小屏幕横屏 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+            
+            .content-container {
+                padding: 20px;
+                margin: 10px 0;
+            }
+            
+            .image-container {
+                margin-bottom: 15px;
+            }
+            
+            .heart-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .question {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            
+            .buttons-container {
+                margin-top: 20px;
+                gap: 15px;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="亲切的图像">
-            </div>
-            <h1>你愿意成为我的儿子吗？</h1>
-            
-            <div class="buttons-container">
-                <button class="btn btn-agree" id="agreeBtn">同意</button>
-                <button class="btn btn-disagree" id="disagreeBtn">不同意</button>
-            </div>
-            
-            <div class="result" id="result">
-                <div class="result-image">
-                    <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="快乐图像">
-                </div>
-                <h2>喜欢你 <span class="heart">❤</span></h2>
-            </div>
+    <div class="content-container" id="main-container">
+        <div class="image-container">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Heart" class="heart-image">
         </div>
+        
+        <h1 class="question">你愿意成为我的儿子吗？</h1>
+        
+        <div class="buttons-container" id="buttons-container">
+            <button class="btn yes-btn" id="yes-btn">同意</button>
+            <button class="btn no-btn" id="no-btn">不同意</button>
+        </div>
+    </div>
+    
+    <div class="content-container success-page" id="success-page">
+        <div class="image-container">
+            <img src="https://images.unsplash.com/photo-1529066516367-36973222c957?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Celebration" class="success-image">
+        </div>
+        
+        <h1 class="success-text">喜欢你！</h1>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const agreeBtn = document.getElementById('agreeBtn');
-            const disagreeBtn = document.getElementById('disagreeBtn');
-            const resultDiv = document.getElementById('result');
-            const buttonsContainer = document.querySelector('.buttons-container');
-            let disagreeCount = 0;
-            const disagreeTexts = [
-                "再想想？",
-                "确定不同意？",
-                "真的不再考虑一下？",
-                "给你最后一次机会！",
-                "我要生气了！",
-                "哼！",
-                "😠",
-                "😡",
-                "💢"
+            const yesBtn = document.getElementById('yes-btn');
+            const noBtn = document.getElementById('no-btn');
+            const buttonsContainer = document.getElementById('buttons-container');
+            const mainContainer = document.getElementById('main-container');
+            const successPage = document.getElementById('success-page');
+            
+            let noClicks = 0;
+            const noTexts = [
+                '不同意', 
+                '你确定？', 
+                '再想想', 
+                '真的吗？', 
+                '最后一次机会', 
+                '我可能会伤心',
+                '再考虑一下？',
+                '真的不再想想？',
+                '这是最后的机会了',
+                '好吧...',
+                '求你了'
             ];
             
-            // 不同意按钮点击事件
-            disagreeBtn.addEventListener('click', function() {
-                disagreeCount++;
+            // 存储初始位置
+            let initialYesBtnTransform = '';
+            let initialNoBtnTransform = '';
+            
+            // 初始化函数
+            function initButtonPositions() {
+                initialYesBtnTransform = yesBtn.style.transform;
+                initialNoBtnTransform = noBtn.style.transform;
+            }
+            
+            noBtn.addEventListener('click', function() {
+                if (noClicks >= noTexts.length) return;
                 
-                // 放大同意按钮 (挤压效果)
-                const currentSize = parseFloat(getComputedStyle(agreeBtn).fontSize);
-                agreeBtn.style.fontSize = (currentSize + 6) + 'px'; // 增加放大力度
+                noClicks++;
                 
-                const currentPadding = parseFloat(getComputedStyle(agreeBtn).paddingLeft);
-                agreeBtn.style.padding = (currentPadding + 4) + 'px ' + (currentPadding + 20) + 'px';
+                // 显著放大"同意"按钮
+                const scaleFactor = 1 + (noClicks * 0.15);
+                yesBtn.style.transform = `${initialYesBtnTransform} scale(${scaleFactor})`;
+                yesBtn.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
                 
-                // 缩小不同意按钮 (被挤压)
-                const currentDisagreeSize = parseFloat(getComputedStyle(disagreeBtn).fontSize);
-                if (currentDisagreeSize > 8) {
-                    disagreeBtn.style.fontSize = (currentDisagreeSize - 4) + 'px'; // 增加缩小力度
+                // 更改不同意按钮的文字
+                noBtn.textContent = noTexts[noClicks];
+                
+                // 将不同意按钮向右移动
+                const moveDistance = Math.min(600, noClicks * 60);
+                noBtn.style.transform = `${initialNoBtnTransform} translateX(${moveDistance}px) scale(0.9)`;
+                
+                // 当点击次数足够多时，将不同意按钮完全推出屏幕
+                if (noClicks >= 10) {
+                    // 计算屏幕宽度
+                    const screenWidth = window.innerWidth;
+                    // 将按钮完全移出屏幕右侧
+                    noBtn.style.transform = `${initialNoBtnTransform} translateX(${screenWidth + 100}px) scale(0.9)`;
+                    noBtn.style.opacity = '0';
                     
-                    const currentDisagreePadding = parseFloat(getComputedStyle(disagreeBtn).paddingLeft);
-                    if (currentDisagreePadding > 5) {
-                        disagreeBtn.style.padding = (currentDisagreePadding - 5) + 'px ' + (currentDisagreePadding - 5) + 'px';
-                    }
-                }
-                
-                // 更改不同意按钮文本
-                if (disagreeCount < disagreeTexts.length) {
-                    disagreeBtn.textContent = disagreeTexts[disagreeCount];
-                } else {
-                    disagreeBtn.textContent = disagreeTexts[disagreeTexts.length - 1];
-                }
-                
-                // 添加抖动效果，增加趣味性
-                disagreeBtn.classList.add('shake');
-                setTimeout(() => {
-                    disagreeBtn.classList.remove('shake');
-                }, 300);
-                
-                // 如果点击次数过多，将不同意按钮移出屏幕
-                if (disagreeCount > 8) {
-                    // 通过缩小和透明度变化实现"被挤出"效果
-                    disagreeBtn.style.transform = 'scale(0.1)';
-                    disagreeBtn.style.opacity = '0';
-                    disagreeBtn.style.pointerEvents = 'none'; // 禁止再次点击
+                    // 将同意按钮居中
+                    buttonsContainer.style.justifyContent = 'center';
                     
-                    // 最后完全隐藏
-                    setTimeout(() => {
-                        disagreeBtn.style.display = 'none';
-                    }, 500);
+                    // 添加脉冲动画
+                    yesBtn.style.animation = 'pulse 1s infinite';
                 }
             });
             
-            // 同意按钮点击事件
-            agreeBtn.addEventListener('click', function() {
-                resultDiv.style.display = 'block';
+            yesBtn.addEventListener('click', function() {
+                mainContainer.style.display = 'none';
+                successPage.style.display = 'block';
+            });
+            
+            // 初始化按钮位置
+            setTimeout(initButtonPositions, 100);
+            
+            // 窗口大小改变时重置按钮位置
+            window.addEventListener('resize', function() {
+                // 重置按钮位置
+                yesBtn.style.transform = initialYesBtnTransform;
+                noBtn.style.transform = initialNoBtnTransform;
+                noBtn.style.opacity = '1';
                 
-                // 隐藏问题和按钮
-                document.querySelector('.buttons-container').style.display = 'none';
-                document.querySelector('h1').style.display = 'none';
-                document.querySelector('.image-container').style.display = 'none';
+                // 重新初始化
+                initButtonPositions();
+                
+                // 如果已经点击多次，重新应用效果
+                if (noClicks > 0) {
+                    const scaleFactor = 1 + (noClicks * 0.15);
+                    yesBtn.style.transform = `${initialYesBtnTransform} scale(${scaleFactor})`;
+                    
+                    const moveDistance = Math.min(600, noClicks * 60);
+                    noBtn.style.transform = `${initialNoBtnTransform} translateX(${moveDistance}px) scale(0.9)`;
+                    
+                    if (noClicks >= 10) {
+                        const screenWidth = window.innerWidth;
+                        noBtn.style.transform = `${initialNoBtnTransform} translateX(${screenWidth + 100}px) scale(0.9)`;
+                        noBtn.style.opacity = '0';
+                        buttonsContainer.style.justifyContent = 'center';
+                        yesBtn.style.animation = 'pulse 1s infinite';
+                    }
+                }
             });
         });
     </script>
 </body>
-</html>
+                </html>
